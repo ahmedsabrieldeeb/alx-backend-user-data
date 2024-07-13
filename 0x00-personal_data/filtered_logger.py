@@ -6,7 +6,6 @@ import logging
 from typing import List
 import re
 import os
-import mysql
 import mysql.connector
 
 
