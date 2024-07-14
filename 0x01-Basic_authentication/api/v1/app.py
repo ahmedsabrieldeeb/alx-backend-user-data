@@ -56,13 +56,13 @@ def before_request():
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    auth = getenv("AUTH_TYPE", "auth")
+    auth_type = getenv("AUTH_TYPE", "auth")
 
-    if auth == "auth":
+    if auth_type == "auth":
         from api.v1.auth.auth import Auth
         auth = Auth()
 
-    if auth == "basic_auth":
+    if auth_type == "basic_auth":
         from api.v1.auth.basic_auth import BasicAuth
         auth = BasicAuth()
 
