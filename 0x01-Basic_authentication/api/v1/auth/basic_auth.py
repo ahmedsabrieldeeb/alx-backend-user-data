@@ -3,7 +3,7 @@
 from .auth import Auth
 import base64
 
-from typing import Tuple
+from typing import Tuple, TypeVar
 
 
 class BasicAuth(Auth):
@@ -74,3 +74,34 @@ class BasicAuth(Auth):
             return (None, None)
 
         return tuple(decoded_base64_authorization_header.split(':', 1))
+
+    def user_object_from_credentials(
+            self,
+            user_email: str, user_pwd: str) -> TypeVar('User'):  # type: ignore
+        """ User object from credentials
+
+        Args:
+            user_email (str): user email
+            user_pwd (str): user password
+
+        Returns:
+            TypeVar('User'): User object
+            None: user not found, no db nor file, wrong data
+        """
+        if not isinstance(user_email, str) or not isinstance(user_pwd, str):
+            return None
+
+        from models.user import User
+
+        try:
+            user = User.search(attributes={"email": user_email})
+        except Exception:
+            return None
+
+        if len(user) != 1:
+            return None
+
+        if not user[0].is_valid_password(user_pwd):
+            return None
+
+        return user[0]
