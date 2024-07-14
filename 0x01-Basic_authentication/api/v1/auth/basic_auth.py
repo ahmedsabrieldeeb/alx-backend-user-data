@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """ Module of BasicAuth class """
+
 from .auth import Auth
 import base64
 
@@ -105,3 +106,35 @@ class BasicAuth(Auth):
             return None
 
         return user[0]
+
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
+        """ Current user
+
+        Args:
+            request (Request): request object
+
+        Returns:
+            TypeVar('User'): User object
+            None: otherwise
+        """
+        authorization_header = self.authorization_header(request)
+        if authorization_header is None:
+            return None
+
+        base64_authorization_header = self.extract_base64_authorization_header(
+            authorization_header)
+        if base64_authorization_header is None:
+            return None
+
+        decoded_base64_authorization_header = self.decode_base64_authorization_header(  # noqa
+            base64_authorization_header)
+        if decoded_base64_authorization_header is None:
+            return None
+
+        user_credentials = self.extract_user_credentials(
+            decoded_base64_authorization_header)
+        if user_credentials in [(None, None), None]:
+            return None
+
+        return self.user_object_from_credentials(
+            user_credentials[0], user_credentials[1])
