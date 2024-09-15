@@ -8,4 +8,5 @@ from typing import Tuple, TypeVar
 
 
 class SessionAuth(Auth):
+    """ SessionAuth class """
     pass
