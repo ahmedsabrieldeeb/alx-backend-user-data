@@ -43,3 +43,18 @@ class SessionAuth(Auth):
             return None
 
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """ Get a User instance from a Session ID
+
+        Args:
+            request (obj): request object
+
+        Returns:
+            obj: User instance
+        """
+        session_cookie = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_cookie)
+
+        from models.user import User
+        return User.get(user_id)
