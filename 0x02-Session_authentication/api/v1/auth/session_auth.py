@@ -58,3 +58,26 @@ class SessionAuth(Auth):
 
         from models.user import User
         return User.get(user_id)
+
+    def destroy_session(self, request=None) -> bool:
+        """ Destroy a session
+        
+        Args:
+            request (obj): request object
+
+        Returns:
+            bool: True if the session has been destroyed, False otherwise
+        """
+        if request is None:
+            return False
+
+        session_cookie = self.session_cookie(request)
+        if session_cookie is None:
+            return False
+
+        user_id = self.user_id_for_session_id(session_cookie)
+        if user_id is None:
+            return False
+
+        del self.user_id_by_session_id[session_cookie]
+        return True
