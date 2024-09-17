@@ -61,7 +61,7 @@ class SessionAuth(Auth):
 
     def destroy_session(self, request=None) -> bool:
         """ Destroy a session
-        
+
         Args:
             request (obj): request object
 
